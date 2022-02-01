@@ -1,40 +1,33 @@
+from collections import deque
 from enum import Enum
-from turtle import isvisible
 
 class Symbol(Enum):
     Parens = 0
     SquareBrackets = 1
     CurlyBrackets = 2
 
-    @staticmethod
-    def of_char (l) :
-        match l:
-            case "(" | ")": return Symbol.Parens
-            case "[" | "]": return Symbol.SquareBrackets
-            case "{" | "}": return Symbol.CurlyBrackets
-
 # Time complexity O(n^2)
 # Space complexity O(1)
-def is_valid_parens (text):
+def is_valid_parens (s):
     parens_stack = []
     is_valid = True
     def open (c) :
-        current = parens_stack[0][0] if (len(parens_stack) > 0) else None
+        current = parens_stack[-1][0] if (len(parens_stack) > 0) else None
         match current:
             case None: parens_stack.append((c, 1))
-            case l if c == l : parens_stack[0] = (c, parens_stack[0][1]+1)
+            case l if c == l : parens_stack[-1] = (c, parens_stack[-1][1]+1)
             case l: parens_stack.append((c, 1))
 
     def close (c):
         nonlocal is_valid
-        current = parens_stack[0][0] if (len(parens_stack) > 0) else None
+        current = parens_stack[-1][0] if (len(parens_stack) > 0) else None
         match current:
             case None: is_valid = False
-            case l if c == l and parens_stack[0][1] == 1: parens_stack.pop ()
-            case l if c == l: parens_stack[0] = (c, parens_stack[0][1]-1)
+            case l if c == l and parens_stack[-1][1] == 1: parens_stack.pop ()
+            case l if c == l: parens_stack[-1] = (c, parens_stack[-1][1]-1)
             case l: is_valid = False
 
-    for l in text :
+    for l in s :
         if not is_valid: return False
         match l :
             case "(": open (Symbol.Parens)
@@ -68,7 +61,8 @@ tests = [
     ("Test #4", ")", False),
     ("Test #5", "(((())))", True),
     ("Test #6", ")))))", False),
-    ("Test #6", "{[}())()]}", False)
+    ("Test #6", "{[}())()]}", False),
+    ("Test #7", "{[]}", True)
 ]
 
 for fut in functions_under_test:
