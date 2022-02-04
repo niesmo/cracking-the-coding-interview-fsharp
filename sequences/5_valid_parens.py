@@ -6,8 +6,6 @@ class Symbol(Enum):
     SquareBrackets = 1
     CurlyBrackets = 2
 
-# Time complexity O(n^2)
-# Space complexity O(1)
 def is_valid_parens (s):
     parens_stack = []
     is_valid = True
@@ -39,6 +37,18 @@ def is_valid_parens (s):
 
     return True if (is_valid and len(parens_stack) == 0) else False
 
+def is_valid_parens_clever (text):
+    valids = ["()", "[]", "{}"]
+    stack = []
+    for l in text :
+        if (len(stack) > 0 and stack[-1] + l in valids):
+            stack.pop ()
+        else:
+            stack.append(l)
+
+    return True if (len(stack) == 0) else False
+
+
 from termcolor import colored
 # fut => function under test
 def validate (description, input, expected, fut):
@@ -53,6 +63,7 @@ def validate (description, input, expected, fut):
 
 functions_under_test = [
     is_valid_parens,
+    is_valid_parens_clever
 ]
 tests = [
     ("Test #1", "()", True),
