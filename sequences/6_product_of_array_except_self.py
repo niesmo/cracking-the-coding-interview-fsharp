@@ -1,6 +1,3 @@
-from turtle import back
-
-
 def product_of_array_except_self_brute_force (nums):
     result = []
     l = len(nums)
